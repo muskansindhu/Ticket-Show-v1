@@ -1,0 +1,73 @@
+{%extends "base.html"%}
+
+{% block navbar %}
+
+<nav class="navbar navbar-dark bg-dark justify-content-between">
+  <ul class="navbar-nav mr-auto d-flex flex-row ">
+    <li class="nav-item active ml-4">
+      <a class="nav-link" href="/user_dashboard">User_{{user.username}}'s Dashboard
+        <span class="sr-only">(current)</span>
+      </a> 
+    </li> 
+    <li class="nav-item ml-4">
+      <a class="nav-link" href="/user_bookings">Bookings</a>
+    </li>
+    <li class="nav-item ml-4">
+      <a class="nav-link" href="/user_logout">Logout</a>
+    </li> 
+  </ul>
+  <form method="POST" action="{{url_for('views.search')}}" class="form-inline">
+    <input class="form-control mr-sm-2" type="search" name="search" placeholder="Search" aria-label="Search">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+  </form>
+</nav>
+
+{% endblock %}
+
+{% block body %}
+<div class="container">
+
+  {%if venues%}
+  {% for venue in venues %}
+  <div class="row">
+  <div class="col-12 card mt-3">
+      <div class="row bg-dark rounded-top">
+        <div class="col-12">
+            <h5 class="text-white p-2 m-0">{{ venue.venue_name }}</h5>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        {% if venue.shows.all() %}
+        {% for show in venue.shows.all() %}
+            <div class="col-sm-4">
+              <div class="card p-2 shadow" style="max-width: 18rem;">
+                <img src="{{ url_for('views.uploaded_poster', filename=show.poster_path.split('/')[-1]) }}"  alt="{{ show.show_name }} Poster" height="300" class="card-img-top mx-auto d-block"><br>
+                    <div class="card-body text-center">
+                    <h6>{{ show.show_name }} ({{show.time}}) {{user_id}}</h6> 
+                    {% if venue.capacity == show.seats_booked %}
+                    <a href="#" class="text-center"><button class="btn btn-primary">Housefull</button></a>
+                    {% else %}
+                    <a href="/show/{{show.id}}/book" class="text-center"><button class="btn btn-primary">Book</button></a>
+                    {% endif %}
+                    <br>
+                    </div>
+                  <br>
+                </div>
+              </div>
+        {% endfor %}
+        {% else %}
+        <div class="col-sm-4">
+          <p class="p-4 text-center">No shows available.</p>
+        </div>
+        {% endif %}
+      </div>
+      <br>
+    </div>
+  </div>
+  <br>
+  {% endfor %}
+  {% else %}
+    <p class="p-4 text-center">No venues found.</p>
+  {% endif %}      
+{%endblock%}

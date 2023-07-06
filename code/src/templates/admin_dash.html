@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block navbar %} 
+
+    <nav class="navbar navbar-dark bg-dark justify-content-between">
+      <ul class="navbar-nav mr-auto d-flex flex-row ">
+        <li class="nav-item active ml-4">
+          <a class="nav-link" href="/admin_dashboard">Admin_{{admin.username}}'s Dashboard
+            <span class="sr-only">(current)</span>
+          </a> 
+        </li> 
+        <li class="nav-item ml-4">
+          <a class="nav-link" href="/summary">Summary</a>
+        </li>
+        <li class="nav-item ml-4">
+          <a class="nav-link" href="/admin_logout">Logout</a>
+        </li> 
+      </ul>
+    </nav>
+  
+  {% endblock %}
+
+{% block body %} 
+
+<br>
+<center><a href="/add_venue"><button class="btn btn-dark">Add Venue</button></a></center>
+<br>
+<div class="container">
+
+    {%if venues%}
+    {% for venue in venues %}
+    <div class="row">
+    <div class="col-12 card mt-3">
+        <div class="row bg-dark rounded-top">
+          <div class="col-12">
+              <h5 class="text-white p-2 m-0">{{ venue.venue_name }}</h5>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          {% for show in venue.shows %}
+            <div class="col-sm-4">
+              <div class="card p-2 shadow" style="max-width: 18rem;">
+                    <img src="{{ url_for('views.uploaded_poster', filename=show.poster_path.split('/')[-1]) }}"  alt="{{ show.show_name }} Poster" height="300" class="card-img-top mx-auto d-block"><br>
+                    <div class="card-body text-center">
+                    <h6>{{ show.show_name }} ({{show.time}})</h6> 
+                    <a href="/show/{{ show.id }}/actions" class="text-center"><button class="btn btn-primary">Actions</button></a>
+                    </div>
+                  <br>
+                </div>
+              </div>
+          {% endfor %}
+        </div>
+        <br>
+        <p><center>
+        <a href="/venue/{{ venue.id }}/add_show"><button class="btn btn-dark">Add Show</button></a>
+        <a href="/venue/{{venue.id}}/edit"><button class="btn btn-dark">Edit</button></a>
+        <a href="{{ url_for('views.delete_venue', venue_id=venue.id) }}"><button class="btn btn-dark" type="submit">Delete</button></a>
+        </center>
+        </p>
+        <br>
+    </div>
+  </div>
+  <br>
+    {% endfor %}
+    {% else %}
+        <p>No venues found. However, you can add a new venue by clicking on the "Add Venue" button and filling out the required information.</p>
+    {% endif %}
+  
+</div>
+{% endblock %}

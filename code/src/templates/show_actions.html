@@ -1,0 +1,41 @@
+{% extends "base.html"%}
+
+{% block navbar %} 
+
+    <nav class="navbar navbar-dark bg-dark justify-content-between">
+      <ul class="navbar-nav mr-auto d-flex flex-row ">
+        <li class="nav-item active ml-4">
+          <a class="nav-link" href="/admin_dashboard">Admin_{{admin.username}}'s Dashboard
+            <span class="sr-only">(current)</span>
+          </a> 
+        </li> 
+        <li class="nav-item ml-4">
+          <a class="nav-link" href="/summary">Summary</a>
+        </li>
+        <li class="nav-item ml-4">
+          <a class="nav-link" href="/admin_logout">Logout</a>
+        </li> 
+      </ul>
+    </nav>
+  
+{% endblock %}
+
+
+{%block body%}
+<div class="container mt-5 pt-5 justify-content-center"> 
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card ">
+                <div class="card-body text-center">
+                    <center><h3>Show Actions</h3></center>
+                    <form method="POST">
+                        <input type="text" value="{{show.show_name}}" name="new_show_name" id="new_show_name" class="form-control my-4 py-2" placeholder="New Show Name">
+                        <input type="submit" value="Save" class="btn btn-primary">
+                    </form>
+                    Do you want to delete the show? <a href="{{ url_for('views.delete_show', show_id=show.id) }}" type="submit">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%}

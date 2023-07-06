@@ -1,0 +1,58 @@
+{%extends "base.html"%}
+
+{% block navbar %}
+
+<nav class="navbar navbar-dark bg-dark justify-content-between">
+  <ul class="navbar-nav mr-auto d-flex flex-row ">
+    <li class="nav-item ml-4">
+      <a class="nav-link" href="/user_dashboard">User_{{user.username}}'s Dashboard
+        <span class="sr-only">(current)</span>
+      </a> 
+    </li> 
+    <li class="nav-item ml-4">
+      <a class="nav-link" href="/user_bookings">Bookings</a>
+    </li>
+    <li class="nav-item ml-4">
+      <a class="nav-link" href="/user_logout">Logout</a>
+    </li> 
+  </ul>
+  <form method="POST" action="{{url_for('views.search')}}" class="form-inline">
+    <input class="form-control mr-sm-2" type="search" name="search" placeholder="Search" aria-label="Search">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+  </form>
+</nav>
+
+{% endblock %}
+
+
+{% block body %}
+<p class="p-4">You searched for:</p>
+{% if searched_show.all() %}
+{% for show in searched_show%}
+<div class="container">
+    <div class="card">
+        <div class="row p-4 ">
+            <div class="col-8 text-center">
+                <h6>{{show.show_name}} - {{show.time}}</h6>
+                {%if show.rating%}
+                    <p>Rating: {{show.rating}}/5</p>
+                {%else%}
+                    <p>Rating: Not Rated</p>
+                {%endif%}
+                <p>Price: {{show.price}}</p>
+                <p>Venue: {{show.venue_id}}</p>
+                <p>{{show.tags}}</p>
+            </div>
+            <div class="card p-2 shadow" style="max-width: 18rem;">
+                <img src="{{ url_for('views.uploaded_poster', filename=show.poster_path.split('/')[-1]) }}"  alt="{{ show.show_name }} Poster" height="300" class="card-img-top mx-auto d-block"><br>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+{% endfor %}
+{% else %}
+<p class="p-4">No shows found.</p>
+{% endif %}
+
+{% endblock %}

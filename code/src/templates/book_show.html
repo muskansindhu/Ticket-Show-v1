@@ -1,0 +1,49 @@
+{%extends "base.html"%}
+{% block navbar %}
+
+<nav class="navbar navbar-dark bg-dark justify-content-between">
+  <ul class="navbar-nav mr-auto d-flex flex-row ">
+    <li class="nav-item active ml-4">
+      <a class="nav-link" href="/user_dashboard">User_{{user.username}}'s Dashboard
+        <span class="sr-only">(current)</span>
+      </a> 
+    </li> 
+    <li class="nav-item ml-4">
+      <a class="nav-link" href="/user_bookings">Bookings</a>
+    </li>
+    <li class="nav-item ml-4">
+      <a class="nav-link" href="/user_logout">Logout</a>
+    </li> 
+  </ul>
+  
+</nav>
+
+{% endblock %}
+{%block body%}
+
+<div class="p-4">
+<p>Booking - Show_{{show_id}} Venue_{{venue_id}}</p>
+<p>Time: {{show.time}}</p>
+<p>Available Seats: {{available_seats}}</p>
+</div>
+<div class="container mt-5 pt-5 justify-content-center"> 
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card ">
+                <div class="card-body text-center">
+                    <center><h3>Booking ({{show.show_name}})</h3></center>
+                    <form method="POST">
+                        <input type="hidden" name="show_id" id="show_id" value="{{ show_id }}">
+                        <input type="hidden" name="user_id" id="user_id" value="{{ user.id }}">
+                        <input type="number" min="0" step="1" name="seats_booked" id="seats_booked" placeholder="Number of Seats" required class="form-control my-4 py-2" >
+                        <input type="number" min="0" step="1" name="price" id="price" placeholder="Price" value="{{ show.price }}" required class="form-control my-4 py-2" readonly>
+                        <input type="submit" value="Confirm Booking" class="btn btn-primary">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{%endblock%}

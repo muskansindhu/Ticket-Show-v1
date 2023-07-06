@@ -1,0 +1,48 @@
+{%extends "base.html"%}
+{% block navbar %}
+
+<nav class="navbar navbar-dark bg-dark justify-content-between">
+  <ul class="navbar-nav mr-auto d-flex flex-row ">
+    <li class="nav-item active ml-4">
+      <a class="nav-link" href="/user_bookings">User_{{user.username}}'s Bookings
+        <span class="sr-only">(current)</span>
+      </a> 
+    </li> 
+    <li class="nav-item ml-4">
+      <a class="nav-link" href="/user_dashboard">Dashboard</a>
+    </li>
+    <li class="nav-item ml-4">
+      <a class="nav-link" href="/user_logout">Logout</a>
+    </li> 
+  </ul>
+  
+</nav>
+
+{% endblock %}
+
+{% block body %} 
+
+<br>
+<div class="container">
+
+    {%if booked_shows%}
+          {% for booking in user.booking %}
+            <div class="col-12">
+              <div class="card p-2 shadow">
+                    <div class="card-body">
+                      <div class="row">
+                      <div class="col-9"><h6>Venue_{{booking.show.venue_id}} -  Show_{{booking.show_id}} ({{booking.show.time}})</h6></div>
+                      <div class="col-3"><a href="/show/{{booking.show.id}}/rate" class="btn btn-primary">Rate</a></div>
+                      </div>
+                    </div>
+                  <br>
+                </div>
+              </div>
+              <br>
+          {% endfor %}
+    {% else %}
+        <p>No Booking found.</p>
+    {% endif %}
+  
+</div>
+{% endblock %}

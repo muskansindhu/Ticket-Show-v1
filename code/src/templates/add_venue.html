@@ -1,0 +1,44 @@
+{%extends "base.html"%}
+
+{% block navbar %} 
+
+    <nav class="navbar navbar-dark bg-dark justify-content-between">
+      <ul class="navbar-nav mr-auto d-flex flex-row ">
+        <li class="nav-item active ml-4">
+          <a class="nav-link" href="/admin_dashboard">Admin_{{admin.username}}'s Dashboard
+            <span class="sr-only">(current)</span>
+          </a> 
+        </li> 
+        <li class="nav-item ml-4">
+          <a class="nav-link" href="/summary">Summary</a>
+        </li>
+        <li class="nav-item ml-4">
+          <a class="nav-link" href="/admin_logout">Logout</a>
+        </li> 
+      </ul>
+    </nav>
+  
+  {% endblock %}
+
+
+{%block body%}
+<div class="container mt-5 pt-5 justify-content-center"> 
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card ">
+                <div class="card-body text-center">
+                    <h3>Add Venue</h3>
+                    <form method="POST">
+                        <input type="text" name="venue_name" id="venue_name" class="form-control my-4 py-2" placeholder="Venue Name"required>
+                        <input type="text" name="place" id="place" class="form-control my-4 py-2" placeholder="Place" required >
+                        <input type="text" name="location" id="location" class="form-control my-4 py-2" placeholder="Location" required >
+                        <input type="number" min="0" step="1" name="capacity" id="capacity" class="form-control my-4 py-2" placeholder="Capacity" required > 
+                        <input type="submit" value="Save" class="btn btn-primary">
+                    </form> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{%endblock%}
