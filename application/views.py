@@ -12,8 +12,6 @@ matplotlib.use('Agg')
 views = Blueprint('views', __name__)
 
 
-
-
 @views.route('/')
 def index():
     return render_template('index.html') 
@@ -25,7 +23,7 @@ def admin_registration():
         username = request.form['username']
         password = request.form['password']
 
-        #add new Admin record to database
+        # add new Admin record to database
         admin = Admin(username=username, password=password)
         db.session.add(admin)
         db.session.commit()
@@ -66,7 +64,7 @@ def admin_login():
             return redirect(url_for('views.admin_login'))
      return render_template('admin_login.html')
 
-#Admin Logout
+# Admin Logout
 @views.route('/admin_logout')
 def admin_logout():
     session.pop('admin_id', None)
@@ -89,7 +87,7 @@ def user_login():
      return render_template('user_login.html')
 
 
-#User Logout
+# User Logout
 @views.route('/user_logout')
 def user_logout():
     session.pop('user_id', None)
@@ -180,7 +178,7 @@ def uploaded_poster(filename):
 
 
 
-#Edit Venue
+# Edit Venue
 @views.route('/venue/<int:venue_id>/edit', methods=['GET', 'POST'])
 def edit_venue(venue_id):
     if 'admin_id' in session:
@@ -194,7 +192,7 @@ def edit_venue(venue_id):
         return render_template('edit_venue.html', venue=venue, admin=admin)
 
 
-#Delete Venue
+# Delete Venue
 @views.route('/venue/<int:venue_id>/delete', methods=['GET', 'POST'])
 def delete_venue(venue_id):
     book = Venue.query.get(venue_id)
@@ -203,7 +201,7 @@ def delete_venue(venue_id):
     return redirect("/admin_dashboard")
 
 
-#Edit Show
+# Edit Show
 @views.route('/show/<int:show_id>/actions', methods=['GET', 'POST'])
 def edit_show(show_id):
     if 'admin_id' in session:
@@ -226,7 +224,7 @@ def delete_show(show_id):
     return redirect("/admin_dashboard")
 
 
-#Book Show
+# Book Show
 @views.route('/show/<int:show_id>/book', methods=['GET', 'POST'])
 def book_show(show_id):
     if 'user_id' in session:
@@ -251,11 +249,11 @@ def book_show(show_id):
             db.session.commit()
             return redirect("/user_dashboard")
         
-        available_seats = venue.capacity - show.seats_booked #update available seats
+        available_seats = venue.capacity - show.seats_booked # update available seats
         return render_template('book_show.html', show_id=show_id, venue_id=venue_id, show=show, user=user, venue=venue, available_seats=available_seats)
 
 
-#User Profile
+# User Profile
 @views.route('/user_bookings', methods=['GET', 'POST'])
 def user_profile():
     if 'user_id' in session:
@@ -268,7 +266,7 @@ def user_profile():
         return render_template('user_booking.html', user=user, booking=booking, booked_shows=booked_shows, show=show, venue=venue)
 
 
-#Search Show
+# Search Show
 @views.route('/search', methods=['POST'])
 def search():
     if 'user_id' in session:
@@ -280,7 +278,7 @@ def search():
         return render_template('search.html', searched_show=searched_show, venue=venue, user=user, show=show)
     
 
-#Rate Show
+# Rate Show
 @views.route('/show/<int:show_id>/rate', methods=['GET', 'POST'])
 def rate_show(show_id):
     if 'user_id' in session:
@@ -296,7 +294,7 @@ def rate_show(show_id):
 
 
 
-#Summary Page
+# Summary Page
 @views.route('/summary', methods=['GET'])
 def summary():
     if 'admin_id' in session:
