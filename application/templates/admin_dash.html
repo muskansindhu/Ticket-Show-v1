@@ -43,7 +43,9 @@
               <div class="card p-2 shadow" style="max-width: 18rem;">
                     <img src="{{ url_for('views.uploaded_poster', filename=show.poster_path.split('/')[-1]) }}"  alt="{{ show.show_name }} Poster" height="300" class="card-img-top mx-auto d-block"><br>
                     <div class="card-body text-center">
-                    <h6>{{ show.show_name }} ({{show.time}})</h6> 
+                    <h5>{{ show.show_name }} </h5>
+                    <h6>Date : {{show.date}} </h6>
+                    <h6>Show Timing : {{show.time}}</h6> 
                     <a href="/show/{{ show.id }}/actions" class="text-center"><button class="btn btn-primary">Actions</button></a>
                     </div>
                   <br>

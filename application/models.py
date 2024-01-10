@@ -35,6 +35,7 @@ class Show(db.Model):
     show_name = db.Column(db.String(120), nullable=False)
     venue_id =  db.Column(db.Integer,db.ForeignKey('venue.venue_id', ondelete='CASCADE'))
     tags = db.Column(db.String(255), nullable=False)
+    date = db.Column(db.Date, nullable=False)
     time = db.Column(db.String(255), nullable=False)
     rating = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Integer, nullable=False)

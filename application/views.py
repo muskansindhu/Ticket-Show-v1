@@ -1,5 +1,6 @@
 import os
 from flask import Flask, Blueprint, render_template, request, redirect, url_for, flash, send_from_directory, session
+from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from .models import Admin, User, Venue, Show, Booking
 from . import db
@@ -23,7 +24,6 @@ def admin_registration():
         username = request.form['username']
         password = request.form['password']
 
-        # add new Admin record to database
         admin = Admin(username=username, password=password)
         db.session.add(admin)
         db.session.commit()
@@ -39,7 +39,6 @@ def user_registration():
         username = request.form['username']
         password = request.form['password']
 
-        #add new User record to database
         user = User(username=username, password=password)
         db.session.add(user)
         db.session.commit()
@@ -49,7 +48,6 @@ def user_registration():
     return render_template('user_reg.html')
 
 
-# Admin Login
 @views.route('/admin_login', methods=['GET', 'POST'])
 def admin_login():
      if request.method == 'POST':
@@ -64,14 +62,13 @@ def admin_login():
             return redirect(url_for('views.admin_login'))
      return render_template('admin_login.html')
 
-# Admin Logout
+
 @views.route('/admin_logout')
 def admin_logout():
     session.pop('admin_id', None)
     return redirect(url_for('views.index'))
 
 
-# User Login
 @views.route('/user_login', methods=['GET', 'POST'])
 def user_login():
      if request.method == 'POST':
@@ -87,13 +84,12 @@ def user_login():
      return render_template('user_login.html')
 
 
-# User Logout
 @views.route('/user_logout')
 def user_logout():
     session.pop('user_id', None)
     return redirect(url_for('views.index'))
 
-# Admin Dashboard
+
 @views.route('/admin_dashboard', methods=['GET', 'POST'])
 def admin_dashboard():
     if 'admin_id' in session:
@@ -107,7 +103,6 @@ def admin_dashboard():
         return redirect(url_for('views.admin_login'))
 
 
-# User Dashboard
 @views.route('/user_dashboard', methods=['GET', 'POST'])
 def user_dashboard():
     if 'user_id' in session:
@@ -123,7 +118,7 @@ def user_dashboard():
     else:
         return redirect(url_for('views.user_login'))
 
-# Add Venue
+
 @views.route('/add_venue', methods=['GET', 'POST'])
 def add_venue():
      if 'admin_id' in session:
@@ -134,7 +129,6 @@ def add_venue():
             location = request.form['location']
             capacity = request.form['capacity']
 
-            #add new Venue record to database
             venue = Venue(venue_name=venue_name, place=place, location=location, capacity=capacity)
             db.session.add(venue)
             db.session.commit()
@@ -143,9 +137,6 @@ def add_venue():
         return render_template('add_venue.html', admin=admin)
 
 
-
-
-# Add Show
 @views.route('/venue/<int:venue_id>/add_show', methods=['GET', 'POST'])
 def add_show(venue_id):
     if 'admin_id' in session:
@@ -156,14 +147,14 @@ def add_show(venue_id):
             rating = request.form['rating']
             tags = request.form['tags']
             time = request.form['time']
+            date_str = request.form.get('date')
+            date_object = datetime.strptime(date_str, '%Y-%m-%d').date()
             price = request.form['price']
             poster = request.files['poster']
-            poster_path = 'src/static/images/' + poster.filename
+            poster_path = 'application/static/images/' + poster.filename
             poster.save(poster_path)
             
-
-            #add new Show record to database
-            show = Show(show_name=show_name, venue_id=venue_id, tags=tags, time=time, rating=rating, price=price, poster_path=poster_path, seats_booked=0)
+            show = Show(show_name=show_name, venue_id=venue_id, tags=tags, time=time, rating=rating, price=price, poster_path=poster_path, seats_booked=0, date=date_object)
             db.session.add(show)
             db.session.commit()
             return redirect(url_for('views.admin_dashboard'))
@@ -176,9 +167,6 @@ def uploaded_poster(filename):
     return send_from_directory('static/images/', filename)
 
 
-
-
-# Edit Venue
 @views.route('/venue/<int:venue_id>/edit', methods=['GET', 'POST'])
 def edit_venue(venue_id):
     if 'admin_id' in session:
@@ -192,7 +180,6 @@ def edit_venue(venue_id):
         return render_template('edit_venue.html', venue=venue, admin=admin)
 
 
-# Delete Venue
 @views.route('/venue/<int:venue_id>/delete', methods=['GET', 'POST'])
 def delete_venue(venue_id):
     book = Venue.query.get(venue_id)
@@ -201,7 +188,6 @@ def delete_venue(venue_id):
     return redirect("/admin_dashboard")
 
 
-# Edit Show
 @views.route('/show/<int:show_id>/actions', methods=['GET', 'POST'])
 def edit_show(show_id):
     if 'admin_id' in session:
@@ -215,7 +201,6 @@ def edit_show(show_id):
         return render_template('show_actions.html', show=show, admin=admin)
 
 
-#Delete Show
 @views.route('/show/<int:show_id>/delete', methods=['GET', 'POST'])
 def delete_show(show_id):
     show = Show.query.get(show_id)
@@ -224,7 +209,6 @@ def delete_show(show_id):
     return redirect("/admin_dashboard")
 
 
-# Book Show
 @views.route('/show/<int:show_id>/book', methods=['GET', 'POST'])
 def book_show(show_id):
     if 'user_id' in session:
@@ -253,7 +237,6 @@ def book_show(show_id):
         return render_template('book_show.html', show_id=show_id, venue_id=venue_id, show=show, user=user, venue=venue, available_seats=available_seats)
 
 
-# User Profile
 @views.route('/user_bookings', methods=['GET', 'POST'])
 def user_profile():
     if 'user_id' in session:
@@ -266,7 +249,6 @@ def user_profile():
         return render_template('user_booking.html', user=user, booking=booking, booked_shows=booked_shows, show=show, venue=venue)
 
 
-# Search Show
 @views.route('/search', methods=['POST'])
 def search():
     if 'user_id' in session:
@@ -278,7 +260,6 @@ def search():
         return render_template('search.html', searched_show=searched_show, venue=venue, user=user, show=show)
     
 
-# Rate Show
 @views.route('/show/<int:show_id>/rate', methods=['GET', 'POST'])
 def rate_show(show_id):
     if 'user_id' in session:
@@ -292,9 +273,6 @@ def rate_show(show_id):
         return render_template('rate_page.html', show=show, user=user)
     
 
-
-
-# Summary Page
 @views.route('/summary', methods=['GET'])
 def summary():
     if 'admin_id' in session:
@@ -315,6 +293,6 @@ def summary():
         graph_file = os.path.join(views.root_path, 'static', 'graph.png')
         plt.savefig(graph_file)
 
-        return render_template('summary.html', graph_file='/static/graph.png', admin=admin, show=show, sorted_show_sale=sorted_show_sale)
+        return render_template('summary.html', graph_file='/static/graph/graph.png', admin=admin, show=show, sorted_show_sale=sorted_show_sale)
 
        
