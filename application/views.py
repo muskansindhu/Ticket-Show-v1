@@ -295,4 +295,6 @@ def summary():
 
         return render_template('summary.html', graph_file='/static/graph/graph.png', admin=admin, show=show, sorted_show_sale=sorted_show_sale)
 
+
+
        
